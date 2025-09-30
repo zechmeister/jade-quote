@@ -1,11 +1,15 @@
-export type QuoteRequest = {
-  fullName: string;
-  email: string;
-  address: string;
-  monthlyConsumptionKwh: number;
-  systemSizeKw: number;
-  downPayment?: number;
-};
+import { z } from "zod";
+
+export const QuoteRequestSchema = z.object({
+  fullName: z.string().min(2),
+  email: z.email(),
+  address: z.string().min(1),
+  monthlyConsumptionKwh: z.number().positive(),
+  systemSizeKw: z.number().positive(),
+  downPayment: z.number().nonnegative().optional(),
+});
+
+export type QuoteRequest = z.infer<typeof QuoteRequestSchema>;
 
 export type Quote = {
   systemPrice: number;
