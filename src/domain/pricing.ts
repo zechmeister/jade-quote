@@ -1,9 +1,15 @@
-import { Offer, Quote, QuoteRequest } from "./quote";
+import { aprByBand, Offer, Quote, QuoteRequest } from "./quote";
+
+export function calculateSystemPrice(
+  systemSizeKw: QuoteRequest["systemSizeKw"]
+): Quote["systemPrice"] {
+  return systemSizeKw * 1200;
+}
 
 export function calculatePrincipal(
   systemSizeKw: QuoteRequest["systemSizeKw"],
   downPayment: QuoteRequest["downPayment"] = 0
-) {
+): Offer["principalUsed"] {
   return Math.max(calculateSystemPrice(systemSizeKw) - downPayment, 0);
 }
 
@@ -16,15 +22,14 @@ export function calculateRiskBand(
   return "C";
 }
 
-const aprByBand = { A: 0.069, B: 0.089, C: 0.119 } as const;
-export function calculateAPR(riskBand: Quote["riskBand"]): number {
+export function calculateAPR(riskBand: Quote["riskBand"]) {
   return aprByBand[riskBand];
 }
 
 export function calculateMonthlyPayment(
   termYears: Offer["termYears"],
   principal: number,
-  apr: (typeof aprByBand)[keyof typeof aprByBand]
+  apr: Offer["apr"]
 ): Offer["monthlyPayment"] {
   const totalMonths = termYears * 12;
   const monthlyRate = apr / 12;
@@ -36,10 +41,4 @@ export function calculateMonthlyPayment(
         (1 - Math.pow(1 + monthlyRate, -totalMonths));
 
   return Math.round(rawMonthlyPayment * 100) / 100;
-}
-
-function calculateSystemPrice(
-  systemSizeKw: QuoteRequest["systemSizeKw"]
-): Quote["systemPrice"] {
-  return systemSizeKw * 1200;
 }
