@@ -2,14 +2,16 @@
   "name": "jade-quote",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
+    "test": "vitest",
     "lint": "eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "npm run lint && npm run format:check"
+    "check": "vitest run && npm run lint && npm run format:check"
   },
   "dependencies": {
     "next": "15.5.4",
@@ -26,6 +28,7 @@
     "eslint-config-next": "15.5.4",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   }
 }
