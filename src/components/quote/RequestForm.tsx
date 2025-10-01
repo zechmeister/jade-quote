@@ -2,9 +2,13 @@
 
 import { QuoteRequest, QuoteRequestSchema } from "@/domain/quote";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 
-export default function RequestForm() {
+type Props = {
+  onSubmit: SubmitHandler<QuoteRequest>;
+};
+
+export default function RequestForm({ onSubmit }: Props) {
   const {
     register,
     handleSubmit,
@@ -21,10 +25,7 @@ export default function RequestForm() {
   return (
     <>
       <form
-        onSubmit={handleSubmit(
-          (data) => console.log(data),
-          (err) => console.log(err)
-        )}
+        onSubmit={handleSubmit(async (data) => await onSubmit(data))}
         className="w-full max-w-lg my-10 flex flex-col gap-8"
       >
         <div>
@@ -150,15 +151,19 @@ export default function RequestForm() {
             errors.downPayment) && (
             <p className="mt-2 ml-3 text-sm text-red-700 flex flex-col gap-1">
               {errors.monthlyConsumptionKwh && (
-                <p>
+                <span className="block">
                   Monthly Consumption: {errors.monthlyConsumptionKwh.message}
-                </p>
+                </span>
               )}
               {errors.systemSizeKw && (
-                <p>System Size: {errors.systemSizeKw.message}</p>
+                <span className="block">
+                  System Size: {errors.systemSizeKw.message}
+                </span>
               )}
               {errors.downPayment && (
-                <p>Down Payment: {errors.downPayment.message}</p>
+                <span className="block">
+                  Down Payment: {errors.downPayment.message}
+                </span>
               )}
             </p>
           )}
