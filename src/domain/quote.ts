@@ -11,18 +11,24 @@ export const QuoteRequestSchema = z.object({
 
 export type QuoteRequest = z.infer<typeof QuoteRequestSchema>;
 
+export const riskBands = ["A", "B", "C"] as const;
+export type RiskBand = (typeof riskBands)[number];
+
+export const termYearsOptions = [5, 10, 15] as const;
+export type TermYears = (typeof termYearsOptions)[number];
+
+export const aprByBand = { A: 0.069, B: 0.089, C: 0.119 } as const;
+export type Apr = (typeof aprByBand)[keyof typeof aprByBand];
+
 export type Quote = {
   systemPrice: number;
-  riskBand: "A" | "B" | "C";
+  riskBand: RiskBand;
   offers: Offer[];
 };
 
-export const termYearOptions = [5, 10, 15] as const;
-export const aprByBand = { A: 0.069, B: 0.089, C: 0.119 } as const;
-
 export type Offer = {
-  termYears: (typeof termYearOptions)[number];
-  apr: (typeof aprByBand)[keyof typeof aprByBand];
+  termYears: TermYears;
+  apr: Apr;
   principalUsed: number;
   monthlyPayment: number;
 };

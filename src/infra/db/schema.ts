@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   index,
   integer,
@@ -37,6 +38,10 @@ export const quotesTable = pgTable(
   ]
 );
 
+export const quotesRelations = relations(quotesTable, ({ many }) => ({
+  offers: many(offersTable),
+}));
+
 export const offersTable = pgTable(
   "offers",
   {
@@ -51,3 +56,10 @@ export const offersTable = pgTable(
   },
   (table) => [index("offers_quote_id_idx").on(table.quoteId)]
 );
+
+export const offersRelations = relations(offersTable, ({ one }) => ({
+  quote: one(quotesTable, {
+    fields: [offersTable.quoteId],
+    references: [quotesTable.id],
+  }),
+}));
