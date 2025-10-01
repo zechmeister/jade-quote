@@ -4,9 +4,10 @@ import { useState } from "react";
 import RequestForm from "./RequestForm";
 import { Quote, QuoteRequest } from "@/domain/quote";
 import QuoteResult from "./QuoteResult";
+import { User } from "@/domain/user";
 
 type Props = {
-  user: { name: string; email: string };
+  user: User;
 };
 
 export default function QuoteFlowClient({ user }: Props) {

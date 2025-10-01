@@ -9,6 +9,7 @@ export default async function QuoteFlow() {
   return (
     <QuoteFlowClient
       user={{
+        id: session.user.id,
         name: session.user.name,
         email: session.user.email,
       }}

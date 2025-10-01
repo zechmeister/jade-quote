@@ -56,6 +56,7 @@ describe("quoteService", () => {
     expect(mockSave).toHaveBeenCalledWith(
       "user-456",
       request,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (({ id, ...quote }) => quote)(expectedQuote)
     );
   });

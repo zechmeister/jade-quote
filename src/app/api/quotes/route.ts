@@ -1,15 +1,9 @@
 import { QuoteRequestSchema } from "@/domain/quote";
 import { quoteService } from "@/app/provide";
-import { auth } from "@/infra/auth";
-import { NextRequest, NextResponse } from "next/server";
+import { withAuth } from "@/app/auth";
+import { NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
-  const session = await auth();
-  if (!session?.user?.id) {
-    console.log("no session found", session);
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export const POST = withAuth(async (request, session) => {
   const body = await request.json();
 
   const parseResult = QuoteRequestSchema.safeParse(body);
@@ -28,7 +22,13 @@ export async function POST(request: NextRequest) {
 
   const quoteRequest = parseResult.data;
 
-  const result = await quoteService.createQuote(session.user.id, quoteRequest);
+  const result = await quoteService.createQuote(session.user!.id, quoteRequest);
 
   return NextResponse.json(result);
-}
+});
+
+export const GET = withAuth(async (_request, session) => {
+  const quotes = await quoteService.getQuotesByUserId(session.user!.id);
+
+  return NextResponse.json(quotes);
+});
