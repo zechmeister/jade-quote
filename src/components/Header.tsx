@@ -19,7 +19,7 @@ export default async function Header() {
           >
             <button
               type="submit"
-              className="text-sm px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
+              className="text-sm px-3 py-2 border-2  rounded-lg hover:bg-gray-100 transition border-gray-200 text-gray-500"
             >
               Logout
             </button>
