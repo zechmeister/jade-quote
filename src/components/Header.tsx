@@ -1,4 +1,4 @@
-import { auth, signIn, signOut } from "@/infra/auth";
+import { auth, signOut } from "@/infra/auth";
 
 export default async function Header() {
   const session = await auth();
