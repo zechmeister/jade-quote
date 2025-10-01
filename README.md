@@ -2,27 +2,13 @@
 
 ## Prerequisites for Development
 
-### 1. Install Dependencies
-
 ```bash
 npm i
-```
-
-### 2. Setup Environment Variables
-
-Copy the example environment file and configure it:
-
-```bash
 cp .env.example .env
-```
-
-### 3. Start Keycloak
-
-Start the required services using Docker Compose:
-
-```bash
 docker compose up -d
 ```
+
+**Note:** If changes made to `keycloak/jade-realm.json`, run `docker compose down -v` to remove volumes before restarting.
 
 ## Run Dev Environment
 
