@@ -31,6 +31,7 @@ export function toDomainOffer(
 
 export function toDomainQuote(quoteRow: QuoteWithOffers): Quote {
   return {
+    id: quoteRow.id,
     systemPrice: parseFloat(quoteRow.systemPrice),
     riskBand: quoteRow.riskBand,
     offers: quoteRow.offers.map(toDomainOffer),

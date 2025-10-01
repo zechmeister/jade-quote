@@ -87,6 +87,7 @@ describe("transformers", () => {
       const result = toDomainQuote(dbQuote);
 
       expect(result).toEqual({
+        id: "quote-1",
         systemPrice: 24000,
         riskBand: "B",
         offers: [

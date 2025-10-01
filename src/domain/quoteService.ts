@@ -8,7 +8,7 @@ import {
 import { Quote, QuoteRequest, termYearsOptions } from "./quote";
 import type { QuoteRepository } from "./quoteRepository";
 
-export function calculateQuote(request: QuoteRequest): Quote {
+function calculateQuote(request: QuoteRequest): Omit<Quote, "id"> {
   const principal = calculatePrincipal(
     request.systemSizeKw,
     request.downPayment
@@ -33,15 +33,10 @@ export function calculateQuote(request: QuoteRequest): Quote {
 
 export function createQuoteService(repository: QuoteRepository) {
   return {
-    calculateQuote,
-
-    async createQuote(
-      userId: string,
-      request: QuoteRequest
-    ): Promise<{ id: string; quote: Quote }> {
+    async createQuote(userId: string, request: QuoteRequest): Promise<Quote> {
       const quote = calculateQuote(request);
       const id = await repository.save(userId, request, quote);
-      return { id, quote };
+      return { id, ...quote };
     },
 
     async getQuoteById(

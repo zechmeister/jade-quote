@@ -21,6 +21,7 @@ export const aprByBand = { A: 0.069, B: 0.089, C: 0.119 } as const;
 export type Apr = (typeof aprByBand)[keyof typeof aprByBand];
 
 export type Quote = {
+  id: string;
   systemPrice: number;
   riskBand: RiskBand;
   offers: Offer[];
