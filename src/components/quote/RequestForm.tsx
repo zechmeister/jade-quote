@@ -1,14 +1,16 @@
 "use client";
 
 import { QuoteRequest, QuoteRequestSchema } from "@/domain/quote";
+import { User } from "@/domain/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 type Props = {
   onSubmit: SubmitHandler<QuoteRequest>;
+  user?: User;
 };
 
-export default function RequestForm({ onSubmit }: Props) {
+export default function RequestForm({ onSubmit, user }: Props) {
   const {
     register,
     handleSubmit,
@@ -16,6 +18,8 @@ export default function RequestForm({ onSubmit }: Props) {
   } = useForm<QuoteRequest>({
     resolver: zodResolver(QuoteRequestSchema),
     defaultValues: {
+      fullName: user?.name || "",
+      email: user?.email || "",
       monthlyConsumptionKwh: 0,
       systemSizeKw: 0,
       downPayment: 0,
@@ -38,9 +42,10 @@ export default function RequestForm({ onSubmit }: Props) {
           <input
             id="fullName"
             {...register("fullName")}
-            className={`w-full border-2 rounded-lg px-3 py-2 ${
-              errors.fullName ? "border-red-700" : "border-gray-300"
-            }`}
+            className={`w-full border-2 rounded-lg px-3 py-2 
+                ${errors.fullName ? "border-red-700" : "border-gray-300"} 
+                ${user?.name ? "bg-gray-100 text-gray-700 cursor-not-allowed" : ""}`}
+            readOnly={Boolean(user?.name)}
           />
           {errors.fullName && (
             <p className="px-3 text-sm mt-1 text-red-700">
@@ -48,7 +53,6 @@ export default function RequestForm({ onSubmit }: Props) {
             </p>
           )}
         </div>
-
         <div>
           <label
             htmlFor="email"
@@ -59,9 +63,10 @@ export default function RequestForm({ onSubmit }: Props) {
           <input
             id="email"
             {...register("email")}
-            className={`w-full border-2 rounded-lg px-3 py-2 ${
-              errors.email ? "border-red-700" : "border-gray-300"
-            }`}
+            className={`w-full border-2 rounded-lg px-3 py-2 
+                ${errors.email ? "border-red-700" : "border-gray-300"}
+                ${user?.email ? "bg-gray-100 text-gray-700 cursor-not-allowed" : ""}`}
+            readOnly={Boolean(user?.email)}
           />
           {errors.email && (
             <p className="px-3 text-sm mt-1 text-red-700">
@@ -69,7 +74,6 @@ export default function RequestForm({ onSubmit }: Props) {
             </p>
           )}
         </div>
-
         <div>
           <label
             htmlFor="address"
@@ -90,7 +94,6 @@ export default function RequestForm({ onSubmit }: Props) {
             </p>
           )}
         </div>
-
         <div className="flex flex-col">
           <div className="flex flex-row gap-4 items-end">
             <div className="flex-1">
@@ -168,10 +171,9 @@ export default function RequestForm({ onSubmit }: Props) {
             </p>
           )}
         </div>
-
         <button
           type="submit"
-          className="bg-[#0EAD69] text-white rounded-lg px-4 py-2 hover:bg-[#0C975B] transition"
+          className="bg-[#0EAD69] text-white rounded-lg mt-8 px-4 py-2 hover:bg-[#0C975B] transition"
         >
           Get pre-qualification
         </button>

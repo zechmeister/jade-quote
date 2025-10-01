@@ -1,48 +1,17 @@
-"use client";
+import { auth } from "@/infra/auth";
+import QuoteFlowClient from "./QuoteFlowClient";
 
-import { useState } from "react";
-import RequestForm from "./RequestForm";
-import { Quote, QuoteRequest } from "@/domain/quote";
-import QuoteResult from "./QuoteResult";
+export default async function QuoteFlow() {
+  const session = await auth();
 
-export default function QuoteFlow() {
-  const [quote, setQuote] = useState<Quote | undefined>(undefined);
-  const [error, setError] = useState<string | undefined>(undefined);
-
-  async function getQuote(request: QuoteRequest) {
-    setError(undefined);
-
-    try {
-      const result = await fetch("/api/quotes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(request),
-      });
-
-      if (!result.ok) {
-        setError(`Could not get Quote: ${result.statusText}.`);
-        return;
-      }
-
-      setQuote(await result.json());
-    } catch (e) {
-      setError((e as Error).message ?? "Could not get Quote.");
-    }
-  }
-
-  if (quote) {
-    return <QuoteResult quote={quote} />;
-  }
+  if (!session?.user?.email || !session?.user?.name) return null;
 
   return (
-    <>
-      {error && (
-        <div className="mb-2 mt-4 rounded border border-red-200 bg-red-50 text-red-700 px-3 py-2 text-sm">
-          {error}
-        </div>
-      )}
-
-      <RequestForm onSubmit={getQuote} />
-    </>
+    <QuoteFlowClient
+      user={{
+        name: session.user.name,
+        email: session.user.email,
+      }}
+    />
   );
 }
