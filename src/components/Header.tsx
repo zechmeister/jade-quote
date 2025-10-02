@@ -8,12 +8,15 @@ export default async function Header() {
     <header className="w-full flex justify-between items-center pt-2">
       {session?.user && (
         <>
-          <div className="flex flex-row gap-4">
+          <div className="flex flex-row gap-6">
             <Link href="/" className="text-sm hover:underline">
               ☀️
             </Link>
             <Link href="/quotes" className="text-sm hover:underline">
-              Quotes
+              My Quotes
+            </Link>
+            <Link href="/admin/quotes" className="text-sm hover:underline">
+              All Quotes
             </Link>
           </div>
           <div className="flex items-center gap-4">

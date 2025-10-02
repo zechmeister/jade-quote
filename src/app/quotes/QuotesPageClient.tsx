@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import QuotesList from "@/components/quote/QuotesList";
 import type { Quote, QuoteRequest } from "@/domain/quote";
 
-type QuoteData = {
-  id: string;
-  request: QuoteRequest;
-  quote: Quote;
-};
-
 export default function QuotesPageClient() {
-  const [quotes, setQuotes] = useState<QuoteData[] | undefined>(undefined);
+  const [quotes, setQuotes] = useState<
+    | {
+        request: QuoteRequest;
+        quote: Quote;
+      }[]
+    | undefined
+  >(undefined);
   const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const router = useRouter();

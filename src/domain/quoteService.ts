@@ -25,8 +25,14 @@ export function createQuoteService(repository: QuoteRepository) {
 
     async getAllByUserId(
       userId: string
-    ): Promise<{ id: string; request: QuoteRequest; quote: Quote }[]> {
+    ): Promise<{ request: QuoteRequest; quote: Quote }[]> {
       return repository.getAllByUserId(userId);
+    },
+
+    async getAll(
+      searchTerm?: string
+    ): Promise<{ request: QuoteRequest; quote: Quote }[]> {
+      return repository.findAll(searchTerm);
     },
   };
 }

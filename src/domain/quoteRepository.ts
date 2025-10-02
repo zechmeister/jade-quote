@@ -16,5 +16,9 @@ export type QuoteRepository = {
 
   getAllByUserId(
     userId: string
-  ): Promise<{ id: string; request: QuoteRequest; quote: Quote }[]>;
+  ): Promise<{ request: QuoteRequest; quote: Quote }[]>;
+
+  findAll(
+    searchTerm?: string
+  ): Promise<{ request: QuoteRequest; quote: Quote }[]>;
 };

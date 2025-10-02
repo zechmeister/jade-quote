@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, or, ilike } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type { Quote, QuoteRequest } from "../../domain/quote";
 import type { QuoteRepository } from "../../domain/quoteRepository";
@@ -82,7 +82,7 @@ export function createQuoteRepository(
 
     async getAllByUserId(
       userId: string
-    ): Promise<Array<{ id: string; request: QuoteRequest; quote: Quote }>> {
+    ): Promise<Array<{ request: QuoteRequest; quote: Quote }>> {
       const quoteRows = await db.query.quotesTable.findMany({
         where: eq(quotesTable.userId, userId),
         with: {
@@ -91,10 +91,26 @@ export function createQuoteRepository(
         orderBy: (quotes, { desc }) => [desc(quotes.createdAt)],
       });
 
-      return quoteRows.map((row) => ({
-        id: row.id,
-        ...mapToQuoteData(row),
-      }));
+      return quoteRows.map((row) => mapToQuoteData(row));
+    },
+
+    async findAll(
+      searchTerm?: string
+    ): Promise<Array<{ request: QuoteRequest; quote: Quote }>> {
+      const quoteRows = await db.query.quotesTable.findMany({
+        where: searchTerm
+          ? or(
+              ilike(quotesTable.fullName, `%${searchTerm}%`),
+              ilike(quotesTable.email, `%${searchTerm}%`)
+            )
+          : undefined,
+        with: {
+          offers: true,
+        },
+        orderBy: (quotes, { desc }) => [desc(quotes.createdAt)],
+      });
+
+      return quoteRows.map((row) => mapToQuoteData(row));
     },
   };
 }
