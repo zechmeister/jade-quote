@@ -30,7 +30,7 @@ export default function RequestForm({ onSubmit, user }: Props) {
     <>
       <form
         onSubmit={handleSubmit(async (data) => await onSubmit(data))}
-        className="w-full max-w-lg my-10 flex flex-col gap-8"
+        className="w-full my-10 flex flex-col gap-8"
       >
         <div>
           <label

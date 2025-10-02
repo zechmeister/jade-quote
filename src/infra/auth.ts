@@ -12,9 +12,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
+    async jwt({ token, account }) {
+      if (account?.providerAccountId) {
+        token.id = account.providerAccountId;
       }
       return token;
     },
