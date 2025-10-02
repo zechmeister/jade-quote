@@ -35,10 +35,11 @@ export default function QuotesPageClient() {
         setQuotes(await response.json());
       } catch (e) {
         setError((e as Error).message ?? "Failed to load quotes");
+      } finally {
+        setLoading(false);
       }
     }
 
-    setLoading(false);
     fetchQuotes();
   }, [router]);
 

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import RequestForm from "./RequestForm";
+import RequestForm from "../../components/quote/RequestForm";
 import { Quote, QuoteRequest } from "@/domain/quote";
-import QuoteResult from "./QuoteResult";
+import QuoteResult from "../../components/quote/QuoteResult";
 import { User } from "@/domain/user";
 
 type Props = {

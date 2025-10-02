@@ -1,5 +1,5 @@
 import { auth } from "@/infra/auth";
-import QuoteFlowClient from "./QuoteFlowClient";
+import QuoteFlowClient from "@/app/quotes/QuoteFlowClient";
 
 export default async function QuoteFlow() {
   const session = await auth();
