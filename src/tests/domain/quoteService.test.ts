@@ -44,11 +44,11 @@ describe("quoteService", () => {
     const repository: QuoteRepository = {
       save: mockSave,
       findById: vi.fn(),
-      findByUserId: vi.fn(),
+      getAllByUserId: vi.fn(),
     };
 
     const service = createQuoteService(repository);
-    const result = await service.createQuote("user-456", request);
+    const result = await service.create("user-456", request);
 
     expect(result).toEqual(expectedQuote);
 
@@ -67,11 +67,11 @@ describe("quoteService", () => {
     const repository: QuoteRepository = {
       save: vi.fn(),
       findById: mockFindById,
-      findByUserId: vi.fn(),
+      getAllByUserId: vi.fn(),
     };
 
     const service = createQuoteService(repository);
-    const result = await service.getQuoteById("quote-123");
+    const result = await service.findById("quote-123");
 
     expect(result).toEqual(mockData);
     expect(mockFindById).toHaveBeenCalledTimes(1);
@@ -83,11 +83,11 @@ describe("quoteService", () => {
     const repository: QuoteRepository = {
       save: vi.fn(),
       findById: mockFindById,
-      findByUserId: vi.fn(),
+      getAllByUserId: vi.fn(),
     };
 
     const service = createQuoteService(repository);
-    const result = await service.getQuoteById("nonexistent");
+    const result = await service.findById("nonexistent");
 
     expect(result).toBeNull();
     expect(mockFindById).toHaveBeenCalledWith("nonexistent");
@@ -102,11 +102,11 @@ describe("quoteService", () => {
     const repository: QuoteRepository = {
       save: vi.fn(),
       findById: vi.fn(),
-      findByUserId: mockFindByUserId,
+      getAllByUserId: mockFindByUserId,
     };
 
     const service = createQuoteService(repository);
-    const result = await service.getQuotesByUserId("user-456");
+    const result = await service.getAllByUserId("user-456");
 
     expect(result).toEqual(mockData);
     expect(mockFindByUserId).toHaveBeenCalledTimes(1);

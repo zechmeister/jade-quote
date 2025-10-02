@@ -1,4 +1,4 @@
-import QuotesPageClient from "../../components/quote/QuotesPageClient";
+import QuotesPageClient from "./QuotesPageClient";
 
 export default function QuotesPage() {
   return <QuotesPageClient />;

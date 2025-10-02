@@ -1,54 +1,32 @@
-import {
-  calculateAPR,
-  calculateMonthlyPayment,
-  calculatePrincipal,
-  calculateRiskBand,
-  calculateSystemPrice,
-} from "./pricing";
-import { Quote, QuoteRequest, termYearsOptions } from "./quote";
+import { calculateQuote } from "./pricing";
+import { Quote, QuoteRequest } from "./quote";
 import type { QuoteRepository } from "./quoteRepository";
-
-function calculateQuote(request: QuoteRequest): Omit<Quote, "id"> {
-  const principal = calculatePrincipal(
-    request.systemSizeKw,
-    request.downPayment
-  );
-  const riskBand = calculateRiskBand(
-    request.monthlyConsumptionKwh,
-    request.systemSizeKw
-  );
-  const apr = calculateAPR(riskBand);
-
-  return {
-    systemPrice: calculateSystemPrice(request.systemSizeKw),
-    riskBand,
-    offers: termYearsOptions.map((termYears) => ({
-      termYears,
-      apr,
-      principalUsed: principal,
-      monthlyPayment: calculateMonthlyPayment(termYears, principal, apr),
-    })),
-  };
-}
 
 export function createQuoteService(repository: QuoteRepository) {
   return {
-    async createQuote(userId: string, request: QuoteRequest): Promise<Quote> {
+    async create(userId: string, request: QuoteRequest): Promise<Quote> {
       const quote = calculateQuote(request);
       const id = await repository.save(userId, request, quote);
       return { id, ...quote };
     },
 
-    async getQuoteById(
+    async findById(
       id: string
     ): Promise<{ request: QuoteRequest; quote: Quote } | null> {
       return repository.findById(id);
     },
 
-    async getQuotesByUserId(
+    async findByIdAndUserId(
+      id: string,
       userId: string
-    ): Promise<Array<{ id: string; request: QuoteRequest; quote: Quote }>> {
-      return repository.findByUserId(userId);
+    ): Promise<{ request: QuoteRequest; quote: Quote } | null> {
+      return repository.findByIdAndUserId(id, userId);
+    },
+
+    async getAllByUserId(
+      userId: string
+    ): Promise<{ id: string; request: QuoteRequest; quote: Quote }[]> {
+      return repository.getAllByUserId(userId);
     },
   };
 }

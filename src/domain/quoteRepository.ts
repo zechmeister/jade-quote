@@ -6,8 +6,15 @@ export type QuoteRepository = {
     request: QuoteRequest,
     quote: Omit<Quote, "id">
   ): Promise<string>;
+
   findById(id: string): Promise<{ request: QuoteRequest; quote: Quote } | null>;
-  findByUserId(
+
+  findByIdAndUserId(
+    id: string,
     userId: string
-  ): Promise<Array<{ id: string; request: QuoteRequest; quote: Quote }>>;
+  ): Promise<{ request: QuoteRequest; quote: Quote } | null>;
+
+  getAllByUserId(
+    userId: string
+  ): Promise<{ id: string; request: QuoteRequest; quote: Quote }[]>;
 };

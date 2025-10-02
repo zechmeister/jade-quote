@@ -22,13 +22,13 @@ export const POST = withAuth(async (request, session) => {
 
   const quoteRequest = parseResult.data;
 
-  const result = await quoteService.createQuote(session.user!.id, quoteRequest);
+  const result = await quoteService.create(session.user!.id, quoteRequest);
 
   return NextResponse.json(result);
 });
 
 export const GET = withAuth(async (_request, session) => {
-  const quotes = await quoteService.getQuotesByUserId(session.user!.id);
+  const quotes = await quoteService.getAllByUserId(session.user!.id);
 
   return NextResponse.json(quotes);
 });

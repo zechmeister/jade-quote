@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import type { Quote, QuoteRequest } from "../../domain/quote";
 import type { QuoteRepository } from "../../domain/quoteRepository";
@@ -62,7 +62,25 @@ export function createQuoteRepository(
       return mapToQuoteData(quoteRow);
     },
 
-    async findByUserId(
+    async findByIdAndUserId(
+      id: string,
+      userId: string
+    ): Promise<{ request: QuoteRequest; quote: Quote } | null> {
+      const quoteRow = await db.query.quotesTable.findFirst({
+        where: and(eq(quotesTable.id, id), eq(quotesTable.userId, userId)),
+        with: {
+          offers: true,
+        },
+      });
+
+      if (!quoteRow) {
+        return null;
+      }
+
+      return mapToQuoteData(quoteRow);
+    },
+
+    async getAllByUserId(
       userId: string
     ): Promise<Array<{ id: string; request: QuoteRequest; quote: Quote }>> {
       const quoteRows = await db.query.quotesTable.findMany({

@@ -1,4 +1,10 @@
-import { aprByBand, Offer, Quote, QuoteRequest } from "./quote";
+import {
+  aprByBand,
+  Offer,
+  Quote,
+  QuoteRequest,
+  termYearsOptions,
+} from "./quote";
 
 export function calculateSystemPrice(
   systemSizeKw: QuoteRequest["systemSizeKw"]
@@ -41,4 +47,27 @@ export function calculateMonthlyPayment(
         (1 - Math.pow(1 + monthlyRate, -totalMonths));
 
   return Math.round(rawMonthlyPayment * 100) / 100;
+}
+
+export function calculateQuote(request: QuoteRequest): Omit<Quote, "id"> {
+  const principal = calculatePrincipal(
+    request.systemSizeKw,
+    request.downPayment
+  );
+  const riskBand = calculateRiskBand(
+    request.monthlyConsumptionKwh,
+    request.systemSizeKw
+  );
+  const apr = calculateAPR(riskBand);
+
+  return {
+    systemPrice: calculateSystemPrice(request.systemSizeKw),
+    riskBand,
+    offers: termYearsOptions.map((termYears) => ({
+      termYears,
+      apr,
+      principalUsed: principal,
+      monthlyPayment: calculateMonthlyPayment(termYears, principal, apr),
+    })),
+  };
 }
