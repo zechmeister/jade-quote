@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import QuotesList from "@/components/quote/QuotesList";
 import type { Quote, QuoteRequest } from "@/domain/quote";
 
-export default function QuotesPageClient() {
+export default function QuotesClient() {
   const [quotes, setQuotes] = useState<
     | {
         request: QuoteRequest;

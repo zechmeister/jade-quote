@@ -1,5 +1,5 @@
-import QuotesPageClient from "./QuotesPageClient";
+import QuotesClient from "./QuotesClient";
 
 export default function QuotesPage() {
-  return <QuotesPageClient />;
+  return <QuotesClient />;
 }

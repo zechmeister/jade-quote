@@ -12,7 +12,10 @@ export async function GET(
 
   const { id } = await params;
 
-  const result = await quoteService.findByIdAndUserId(id, session.user.id);
+  const result = session.user.roles.includes("admin")
+    ? await quoteService.findById(id)
+    : await quoteService.findByIdAndUserId(id, session.user.id);
+
   if (!result)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
