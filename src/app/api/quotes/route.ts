@@ -1,12 +1,14 @@
 import { QuoteRequestSchema } from "@/domain/quote";
 import { quoteService } from "@/app/provide";
-import { withAuth } from "@/app/auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/infra/auth";
 
-export const POST = withAuth(async (request, session) => {
-  const body = await request.json();
+export async function POST(request: NextRequest) {
+  const session = await auth();
+  if (!session?.user?.id)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const parseResult = QuoteRequestSchema.safeParse(body);
+  const parseResult = QuoteRequestSchema.safeParse(await request.json());
   if (!parseResult.success) {
     return NextResponse.json(
       {
@@ -20,15 +22,17 @@ export const POST = withAuth(async (request, session) => {
     );
   }
 
-  const quoteRequest = parseResult.data;
+  return NextResponse.json(
+    await quoteService.create(session.user.id, parseResult.data)
+  );
+}
 
-  const result = await quoteService.create(session.user!.id, quoteRequest);
+// eslint-disable-next-line
+export async function GET(request: NextRequest) {
+  const session = await auth();
+  if (!session?.user?.id)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  return NextResponse.json(result);
-});
-
-export const GET = withAuth(async (_request, session) => {
-  const quotes = await quoteService.getAllByUserId(session.user!.id);
-
+  const quotes = await quoteService.getAllByUserId(session.user.id);
   return NextResponse.json(quotes);
-});
+}
