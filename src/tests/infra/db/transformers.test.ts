@@ -62,8 +62,8 @@ describe("transformers", () => {
       const dbQuote: QuoteWithOffers = {
         id: "quote-1",
         userId: "user-1",
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date("2025-10-02"),
+        updatedAt: new Date("2025-10-02"),
         fullName: "John Doe",
         email: "john@example.com",
         address: "123 Main St",
@@ -88,6 +88,7 @@ describe("transformers", () => {
 
       expect(result).toEqual({
         id: "quote-1",
+        createdAt: new Date("2025-10-02"),
         systemPrice: 24000,
         riskBand: "B",
         offers: [

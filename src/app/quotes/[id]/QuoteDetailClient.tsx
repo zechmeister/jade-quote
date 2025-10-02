@@ -32,7 +32,7 @@ export default function QuoteDetailClient({ id }: Props) {
     }
 
     fetchQuote();
-  }, [router]);
+  }, [id]);
 
   return (
     <div className="w-full py-8">

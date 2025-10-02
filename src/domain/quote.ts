@@ -25,6 +25,7 @@ export type Quote = {
   systemPrice: number;
   riskBand: RiskBand;
   offers: Offer[];
+  createdAt: Date;
 };
 
 export type Offer = {

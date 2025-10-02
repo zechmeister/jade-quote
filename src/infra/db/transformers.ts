@@ -35,6 +35,7 @@ export function toDomainQuote(quoteRow: QuoteWithOffers): Quote {
     systemPrice: parseFloat(quoteRow.systemPrice),
     riskBand: quoteRow.riskBand,
     offers: quoteRow.offers.map(toDomainOffer),
+    createdAt: quoteRow.createdAt,
   };
 }
 
