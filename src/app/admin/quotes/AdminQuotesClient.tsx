@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import QuotesList from "@/components/quote/QuotesList";
 import type { Quote, QuoteRequest } from "@/domain/quote";
@@ -20,42 +20,45 @@ export default function AdminQuotesClient() {
   const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(true);
 
-  const fetchQuotes = async (search?: string) => {
-    setLoading(true);
-    setError(undefined);
+  const fetchQuotes = useCallback(
+    async (search?: string) => {
+      setLoading(true);
+      setError(undefined);
 
-    try {
-      const url = search
-        ? `/api/admin/quotes?search=${encodeURIComponent(search)}`
-        : "/api/admin/quotes";
-      const response = await fetch(url);
+      try {
+        const url = search
+          ? `/api/admin/quotes?search=${encodeURIComponent(search)}`
+          : "/api/admin/quotes";
+        const response = await fetch(url);
 
-      if (response.status === 401) {
-        router.push("/api/auth/signin");
-        return;
+        if (response.status === 401) {
+          router.push("/api/auth/signin");
+          return;
+        }
+
+        if (response.status === 403) {
+          setError("Access denied. Admin privileges required.");
+          return;
+        }
+
+        if (!response.ok) {
+          setError(`Failed to load quotes: ${response.statusText}`);
+          return;
+        }
+
+        setQuotes(await response.json());
+      } catch (e) {
+        setError((e as Error).message ?? "Failed to load quotes");
+      } finally {
+        setLoading(false);
       }
-
-      if (response.status === 403) {
-        setError("Access denied. Admin privileges required.");
-        return;
-      }
-
-      if (!response.ok) {
-        setError(`Failed to load quotes: ${response.statusText}`);
-        return;
-      }
-
-      setQuotes(await response.json());
-    } catch (e) {
-      setError((e as Error).message ?? "Failed to load quotes");
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [router]
+  );
 
   useEffect(() => {
     fetchQuotes();
-  }, [router]);
+  }, [fetchQuotes]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

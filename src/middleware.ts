@@ -1,18 +1,16 @@
 import { auth } from "@/infra/auth";
 import { NextRequest, NextResponse } from "next/server";
+import { isAllowed } from "@/app/api/auth";
 
 export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/api/auth"))
-    return NextResponse.next();
+  const session = await auth();
 
-  if (request.nextUrl.pathname.startsWith("/api")) {
-    const session = await auth();
-
-    if (!session?.user?.id)
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  return NextResponse.next();
+  return isAllowed(request.nextUrl.pathname, session)
+    ? NextResponse.next()
+    : NextResponse.json(
+        { error: session?.user?.id ? "Forbidden" : "Unauthorized" },
+        { status: session?.user?.id ? 403 : 401 }
+      );
 }
 
 export const config = {

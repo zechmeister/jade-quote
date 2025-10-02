@@ -15,9 +15,11 @@ export default async function Header() {
             <Link href="/quotes" className="text-sm hover:underline">
               My Quotes
             </Link>
-            <Link href="/admin/quotes" className="text-sm hover:underline">
-              All Quotes
-            </Link>
+            {session.user.roles?.includes("admin") && (
+              <Link href="/admin/quotes" className="text-sm hover:underline">
+                All Quotes
+              </Link>
+            )}
           </div>
           <div className="flex items-center gap-4">
             <div className="text-sm text-right leading-4">
