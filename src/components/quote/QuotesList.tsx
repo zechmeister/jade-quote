@@ -22,6 +22,8 @@ export default function QuotesList({ quotes }: Props) {
     <table className="w-full">
       <thead>
         <tr>
+          <th className="text-left p-2">User</th>
+          <th className="text-left p-2">email</th>
           <th className="text-left p-2">Date</th>
           <th className="text-left p-2">System Size</th>
           <th className="text-right p-2">Price</th>
@@ -35,6 +37,8 @@ export default function QuotesList({ quotes }: Props) {
             onClick={() => router.push(`/quotes/${quote.id}`)}
             className="cursor-pointer hover:bg-gray-100"
           >
+            <td className="text-left p-2">{quote.user.name}</td>
+            <td className="text-left p-2">{quote.user.email}</td>
             <td className="text-left p-2">
               {new Date(quote.createdAt).toLocaleDateString()}
             </td>
