@@ -49,7 +49,9 @@ export function calculateMonthlyPayment(
   return Math.round(rawMonthlyPayment * 100) / 100;
 }
 
-export function calculateQuote(request: QuoteRequest): Omit<Quote, "id"> {
+export function calculateQuote(
+  request: QuoteRequest
+): Omit<Quote, "id" | "createdAt" | "user"> {
   const principal = calculatePrincipal(
     request.systemSizeKw,
     request.downPayment

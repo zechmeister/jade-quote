@@ -5,11 +5,11 @@ import type { User } from "./user";
 
 export function createQuoteService(repository: QuoteRepository) {
   return {
-    async create(request: QuoteRequest, user: User): Promise<Quote> {
+    async create(request: QuoteRequest, user: User): Promise<string> {
       const calculatedQuote = calculateQuote(request);
       const quote = { ...calculatedQuote, user };
       const id = await repository.save(request, quote);
-      return { id, ...quote };
+      return id;
     },
 
     async findById(

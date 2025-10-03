@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import RequestForm from "../../components/quote/RequestForm";
-import { Quote, QuoteRequest } from "@/domain/quote";
-import QuoteResult from "../../components/quote/QuoteResult";
+import { QuoteRequest } from "@/domain/quote";
 import { User } from "@/domain/user";
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function QuoteFlowClient({ user }: Props) {
-  const [quote, setQuote] = useState<Quote | undefined>(undefined);
+  const router = useRouter();
   const [error, setError] = useState<string | undefined>(undefined);
 
   async function getQuote(request: QuoteRequest) {
@@ -29,14 +29,11 @@ export default function QuoteFlowClient({ user }: Props) {
         return;
       }
 
-      setQuote(await result.json());
+      const quoteId = await result.json();
+      router.push(`/quotes/${quoteId}`);
     } catch (e) {
       setError((e as Error).message ?? "Could not get Quote.");
     }
-  }
-
-  if (quote) {
-    return <QuoteResult quote={quote} />;
   }
 
   return (

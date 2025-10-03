@@ -1,7 +1,10 @@
 import { Quote, QuoteRequest } from "./quote";
 
 export type QuoteRepository = {
-  save(request: QuoteRequest, quote: Omit<Quote, "id">): Promise<string>;
+  save(
+    request: QuoteRequest,
+    quote: Omit<Quote, "id" | "createdAt">
+  ): Promise<string>;
 
   findById(id: string): Promise<{ request: QuoteRequest; quote: Quote } | null>;
 

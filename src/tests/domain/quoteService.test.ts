@@ -58,7 +58,7 @@ describe("quoteService", () => {
     const service = createQuoteService(repository);
     const result = await service.create(request, user);
 
-    expect(result).toEqual(expectedQuote);
+    expect(result).toEqual("quote-1");
 
     expect(mockSave).toHaveBeenCalledTimes(1);
     expect(mockSave).toHaveBeenCalledWith(

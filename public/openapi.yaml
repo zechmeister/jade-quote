@@ -135,7 +135,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Quote"
+                type: string
+                description: The ID of the created quote
+                example: "550e8400-e29b-41d4-a716-446655440000"
         "400":
           description: Validation failed
           content:
