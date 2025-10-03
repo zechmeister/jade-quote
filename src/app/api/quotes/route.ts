@@ -31,11 +31,17 @@ export async function POST(request: NextRequest) {
 
   try {
     const quote = await quoteService.create(parseResult.data, user);
-    logger.info({ quoteId: quote.id, userId: session.user.id }, "Quote created");
+    logger.info(
+      { quoteId: quote.id, userId: session.user.id },
+      "Quote created"
+    );
     return NextResponse.json(quote);
   } catch (error) {
     logger.error({ error, userId: session.user.id }, "Failed to create quote");
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
 

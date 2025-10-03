@@ -12,6 +12,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(quotes);
   } catch (error) {
     logger.error({ error, search }, "Failed to retrieve quotes");
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

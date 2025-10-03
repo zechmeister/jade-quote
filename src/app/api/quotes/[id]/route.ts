@@ -26,7 +26,13 @@ export async function GET(
     logger.info({ quoteId: id, userId: session.user.id }, "Quote retrieved");
     return NextResponse.json(result);
   } catch (error) {
-    logger.error({ error, quoteId: id, userId: session.user.id }, "Failed to retrieve quote");
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    logger.error(
+      { error, quoteId: id, userId: session.user.id },
+      "Failed to retrieve quote"
+    );
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
