@@ -1,0 +1,269 @@
+openapi: 3.0.3
+info:
+  title: Jade Quote API
+  version: 0.0.1
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: authjs.session-token
+      description: Session cookie from NextAuth
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+    QuoteRequest:
+      type: object
+      required:
+        - address
+        - monthlyConsumptionKwh
+        - systemSizeKw
+      properties:
+        address:
+          type: string
+          example: "123 Main St, Springfield"
+        monthlyConsumptionKwh:
+          type: number
+          example: 400
+        systemSizeKw:
+          type: number
+          example: 20
+        downPayment:
+          type: number
+          example: 5000
+
+    Offer:
+      type: object
+      properties:
+        termYears:
+          type: integer
+          enum: [5, 10, 15]
+        apr:
+          type: number
+          example: 0.089
+        principalUsed:
+          type: number
+          example: 19000
+        monthlyPayment:
+          type: number
+          example: 239.66
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+
+    Quote:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        systemPrice:
+          type: number
+          example: 24000
+        riskBand:
+          type: string
+          enum: [A, B, C, D]
+        user:
+          $ref: '#/components/schemas/User'
+        offers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Offer'
+
+    QuoteWithRequest:
+      type: object
+      properties:
+        request:
+          $ref: '#/components/schemas/QuoteRequest'
+        quote:
+          $ref: '#/components/schemas/Quote'
+
+paths:
+  /api/health:
+    get:
+      summary: Health check
+      description: Returns the health status of the service
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  service:
+                    type: string
+                    example: jade-quote
+
+  /api/quotes:
+    post:
+      summary: Create a new quote
+      description: Create a solar panel financing quote for the authenticated user
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteRequest'
+      responses:
+        '200':
+          description: Quote created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quote'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  issues:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        path:
+                          type: string
+                        message:
+                          type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    get:
+      summary: Get user's quotes
+      description: Retrieve all quotes for the authenticated user
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: List of quotes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuoteWithRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/quotes/{id}:
+    get:
+      summary: Get a single quote
+      description: Retrieve a specific quote by ID. Users can only access their own quotes. Admins can access any quote.
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Quote ID
+      responses:
+        '200':
+          description: Quote retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuoteWithRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Quote not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/admin/quotes:
+    get:
+      summary: Get all quotes (admin only)
+      description: Retrieve all quotes with optional search filtering by user name or email
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Search term to filter by user name or email
+      responses:
+        '200':
+          description: List of all quotes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuoteWithRequest'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden (admin role required)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
