@@ -2,6 +2,7 @@ import { QuoteRequestSchema } from "@/domain/quote";
 import { quoteService } from "@/app/provide";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/infra/auth";
+import { logger } from "@/infra/logger";
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -28,7 +29,14 @@ export async function POST(request: NextRequest) {
     email: session.user.email || "",
   };
 
-  return NextResponse.json(await quoteService.create(parseResult.data, user));
+  try {
+    const quote = await quoteService.create(parseResult.data, user);
+    logger.info({ quoteId: quote.id, userId: session.user.id }, "Quote created");
+    return NextResponse.json(quote);
+  } catch (error) {
+    logger.error({ error, userId: session.user.id }, "Failed to create quote");
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }
 
 // eslint-disable-next-line

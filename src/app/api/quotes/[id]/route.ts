@@ -1,5 +1,6 @@
 import { quoteService } from "@/app/provide";
 import { auth } from "@/infra/auth";
+import { logger } from "@/infra/logger";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -12,12 +13,20 @@ export async function GET(
 
   const { id } = await params;
 
-  const result = session.user.roles.includes("admin")
-    ? await quoteService.findById(id)
-    : await quoteService.findByIdAndUserId(id, session.user.id);
+  try {
+    const result = session.user.roles.includes("admin")
+      ? await quoteService.findById(id)
+      : await quoteService.findByIdAndUserId(id, session.user.id);
 
-  if (!result)
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!result) {
+      logger.warn({ quoteId: id, userId: session.user.id }, "Quote not found");
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
 
-  return NextResponse.json(result);
+    logger.info({ quoteId: id, userId: session.user.id }, "Quote retrieved");
+    return NextResponse.json(result);
+  } catch (error) {
+    logger.error({ error, quoteId: id, userId: session.user.id }, "Failed to retrieve quote");
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
 }
