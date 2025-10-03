@@ -54,11 +54,14 @@ To access the API documentation, start the application and navigate to http://lo
 
 ## Design & Architecture
 
-**Architecture**: Ports and adapters (Hexagonal) focusing on dependency-free domain layer. Business logic lives in pure, testable domain functions, with infrastructure (database, auth) adapters. More boilerplate, e.g. `QuoteService` needs a `QuoteRepo`, which is implemented by `PostgresQuoteRepo` but this makes adapters pluggable. Wiring up (Dependency Injection) for next via single `src/app/provide.ts`.
+**Architecture**: Ports and adapters (Hexagonal) focusing on dependency-free domain layer. Business logic lives in pure, testable domain functions, with infrastructure (database, auth) adapters.
+More boilerplate, e.g. `QuoteService` needs a `QuoteRepo`, which is implemented by `PostgresQuoteRepo` but this makes adapters pluggable. Wiring up (Dependency Injection) for next via single `src/app/provide.ts`.
 
 **Database**: Drizzle ORM for type-safe queries and SQL migration generation for deployment.
 
-**Authentication**: Keycloak (enterprise OIDC/SSO) with NextAuth v5 for session management, user registration and role-based access control. A realm config for development with client, roles, seed users is checked in (`keycloak/jade-dev-realm.json`) and is imported on start up. Users are mirrored to local database on quote creation to enable filtering without Keycloak round-trips. Note: True BFF pattern would require server-side session storage (e.g. redis) to avoid JWT in cookies. Took time setting up, but login/registration out of the box.
+**Authentication**: Keycloak (enterprise OIDC/SSO) with Auth.js for session management, user registration and role-based access control. A realm config for development with client, roles, seed users is checked in (`keycloak/jade-dev-realm.json`) and is imported on start up.
+
+Users are mirrored to local database on quote creation to enable filtering without Keycloak round-trips. Note: True BFF pattern would require server-side session storage (e.g. redis) to avoid JWT in cookies. Took time setting up, but login/registration out of the box.
 
 ### Next/Missing
 
