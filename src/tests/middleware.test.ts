@@ -8,6 +8,12 @@ describe("isAllowed", () => {
     });
   });
 
+  describe("/api/health paths", () => {
+    test("should allow unauthenticated access", () => {
+      expect(isAllowed("/api/health", null)).toBe(true);
+    });
+  });
+
   describe("/api paths", () => {
     test("should deny when not authenticated", () => {
       expect(isAllowed("/api/quotes", null)).toBe(false);
