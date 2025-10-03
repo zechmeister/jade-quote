@@ -83,19 +83,19 @@ components:
           type: string
           enum: [A, B, C, D]
         user:
-          $ref: '#/components/schemas/User'
+          $ref: "#/components/schemas/User"
         offers:
           type: array
           items:
-            $ref: '#/components/schemas/Offer'
+            $ref: "#/components/schemas/Offer"
 
     QuoteWithRequest:
       type: object
       properties:
         request:
-          $ref: '#/components/schemas/QuoteRequest'
+          $ref: "#/components/schemas/QuoteRequest"
         quote:
-          $ref: '#/components/schemas/Quote'
+          $ref: "#/components/schemas/Quote"
 
 paths:
   /api/health:
@@ -103,7 +103,7 @@ paths:
       summary: Health check
       description: Returns the health status of the service
       responses:
-        '200':
+        "200":
           description: Service is healthy
           content:
             application/json:
@@ -128,15 +128,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuoteRequest'
+              $ref: "#/components/schemas/QuoteRequest"
       responses:
-        '200':
+        "200":
           description: Quote created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Quote'
-        '400':
+                $ref: "#/components/schemas/Quote"
+        "400":
           description: Validation failed
           content:
             application/json:
@@ -154,18 +154,18 @@ paths:
                           type: string
                         message:
                           type: string
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '500':
+                $ref: "#/components/schemas/Error"
+        "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
     get:
       summary: Get user's quotes
@@ -173,20 +173,20 @@ paths:
       security:
         - cookieAuth: []
       responses:
-        '200':
+        "200":
           description: List of quotes
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/QuoteWithRequest'
-        '401':
+                  $ref: "#/components/schemas/QuoteWithRequest"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /api/quotes/{id}:
     get:
@@ -202,30 +202,30 @@ paths:
             type: string
           description: Quote ID
       responses:
-        '200':
+        "200":
           description: Quote retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/QuoteWithRequest'
-        '401':
+                $ref: "#/components/schemas/QuoteWithRequest"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '404':
+                $ref: "#/components/schemas/Error"
+        "404":
           description: Quote not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '500':
+                $ref: "#/components/schemas/Error"
+        "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /api/admin/quotes:
     get:
@@ -241,29 +241,29 @@ paths:
             type: string
           description: Search term to filter by user name or email
       responses:
-        '200':
+        "200":
           description: List of all quotes
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/QuoteWithRequest'
-        '401':
+                  $ref: "#/components/schemas/QuoteWithRequest"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '403':
+                $ref: "#/components/schemas/Error"
+        "403":
           description: Forbidden (admin role required)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '500':
+                $ref: "#/components/schemas/Error"
+        "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
