@@ -22,9 +22,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  return NextResponse.json(
-    await quoteService.create(session.user.id, parseResult.data)
-  );
+  const user = {
+    id: session.user.id,
+    name: session.user.name || "",
+    email: session.user.email || "",
+  };
+
+  return NextResponse.json(await quoteService.create(parseResult.data, user));
 }
 
 // eslint-disable-next-line

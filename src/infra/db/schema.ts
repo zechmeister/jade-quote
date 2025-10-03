@@ -12,18 +12,24 @@ import {
 
 export const riskBandEnum = pgEnum("risk_band", ["A", "B", "C"]);
 
+export const usersTable = pgTable("users", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+});
+
 export const quotesTable = pgTable(
   "quotes",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: text("user_id").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersTable.id),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at")
       .notNull()
       .defaultNow()
       .$onUpdate(() => new Date()),
-    fullName: text("full_name").notNull(),
-    email: text("email").notNull(),
     address: text("address").notNull(),
     monthlyConsumptionKwh: numeric("monthly_consumption_kwh").notNull(),
     systemSizeKw: numeric("system_size_kw").notNull(),
@@ -38,8 +44,12 @@ export const quotesTable = pgTable(
   ]
 );
 
-export const quotesRelations = relations(quotesTable, ({ many }) => ({
+export const quotesRelations = relations(quotesTable, ({ many, one }) => ({
   offers: many(offersTable),
+  user: one(usersTable, {
+    fields: [quotesTable.userId],
+    references: [usersTable.id],
+  }),
 }));
 
 export const offersTable = pgTable(

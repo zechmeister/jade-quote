@@ -15,6 +15,13 @@
       "when": 1759340476980,
       "tag": "0001_perpetual_sunset_bain",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759447239290,
+      "tag": "0002_lean_trish_tilby",
+      "breakpoints": true
     }
   ]
 }

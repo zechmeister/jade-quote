@@ -1,12 +1,14 @@
 import { calculateQuote } from "./pricing";
 import { Quote, QuoteRequest } from "./quote";
 import type { QuoteRepository } from "./quoteRepository";
+import type { User } from "./user";
 
 export function createQuoteService(repository: QuoteRepository) {
   return {
-    async create(userId: string, request: QuoteRequest): Promise<Quote> {
-      const quote = calculateQuote(request);
-      const id = await repository.save(userId, request, quote);
+    async create(request: QuoteRequest, user: User): Promise<Quote> {
+      const calculatedQuote = calculateQuote(request);
+      const quote = { ...calculatedQuote, user };
+      const id = await repository.save(request, quote);
       return { id, ...quote };
     },
 

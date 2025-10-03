@@ -1,22 +1,28 @@
 import { type Quote, type QuoteRequest } from "@/domain/quote";
 import { type QuoteRepository } from "@/domain/quoteRepository";
 import { createQuoteService } from "@/domain/quoteService";
+import type { User } from "@/domain/user";
 import { describe, expect, test, vi } from "vitest";
 
 describe("quoteService", () => {
-  const request: QuoteRequest = {
-    fullName: "foo name",
+  const user: User = {
+    id: "user-456",
+    name: "foo name",
     email: "test@example.com",
+  };
+
+  const request: QuoteRequest = {
     address: "foo address",
     monthlyConsumptionKwh: 400,
     systemSizeKw: 20,
     downPayment: 5000,
   };
 
-  const expectedQuote: Quote = {
+  const expectedQuote: Partial<Quote> = {
     id: "quote-1",
     systemPrice: 24000,
     riskBand: "B",
+    user,
     offers: [
       {
         apr: 0.089,
@@ -44,17 +50,18 @@ describe("quoteService", () => {
     const repository: QuoteRepository = {
       save: mockSave,
       findById: vi.fn(),
+      findByIdAndUserId: vi.fn(),
       getAllByUserId: vi.fn(),
+      findAll: vi.fn(),
     };
 
     const service = createQuoteService(repository);
-    const result = await service.create("user-456", request);
+    const result = await service.create(request, user);
 
     expect(result).toEqual(expectedQuote);
 
     expect(mockSave).toHaveBeenCalledTimes(1);
     expect(mockSave).toHaveBeenCalledWith(
-      "user-456",
       request,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (({ id, ...quote }) => quote)(expectedQuote)
@@ -67,7 +74,9 @@ describe("quoteService", () => {
     const repository: QuoteRepository = {
       save: vi.fn(),
       findById: mockFindById,
+      findByIdAndUserId: vi.fn(),
       getAllByUserId: vi.fn(),
+      findAll: vi.fn(),
     };
 
     const service = createQuoteService(repository);
@@ -83,7 +92,9 @@ describe("quoteService", () => {
     const repository: QuoteRepository = {
       save: vi.fn(),
       findById: mockFindById,
+      findByIdAndUserId: vi.fn(),
       getAllByUserId: vi.fn(),
+      findAll: vi.fn(),
     };
 
     const service = createQuoteService(repository);
@@ -95,14 +106,16 @@ describe("quoteService", () => {
 
   test("getQuotesByUserId should call repository.findByUserId", async () => {
     const mockData = [
-      { id: "quote-1", request, quote: expectedQuote },
-      { id: "quote-2", request, quote: expectedQuote },
+      { request, quote: expectedQuote },
+      { request, quote: expectedQuote },
     ];
     const mockFindByUserId = vi.fn().mockResolvedValue(mockData);
     const repository: QuoteRepository = {
       save: vi.fn(),
       findById: vi.fn(),
+      findByIdAndUserId: vi.fn(),
       getAllByUserId: mockFindByUserId,
+      findAll: vi.fn(),
     };
 
     const service = createQuoteService(repository);

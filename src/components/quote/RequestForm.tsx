@@ -18,8 +18,6 @@ export default function RequestForm({ onSubmit, user }: Props) {
   } = useForm<QuoteRequest>({
     resolver: zodResolver(QuoteRequestSchema),
     defaultValues: {
-      fullName: user?.name || "",
-      email: user?.email || "",
       monthlyConsumptionKwh: 0,
       systemSizeKw: 0,
       downPayment: 0,
@@ -41,17 +39,10 @@ export default function RequestForm({ onSubmit, user }: Props) {
           </label>
           <input
             id="fullName"
-            {...register("fullName")}
-            className={`w-full border-2 rounded-lg px-3 py-2 
-                ${errors.fullName ? "border-red-700" : "border-gray-300"} 
-                ${user?.name ? "bg-gray-100 text-gray-700 cursor-not-allowed" : ""}`}
+            value={user?.name}
+            className="w-full border-2 rounded-lg px-3 py-2 border-gray-300 bg-gray-100 text-gray-700 cursor-not-allowed"
             readOnly={Boolean(user?.name)}
           />
-          {errors.fullName && (
-            <p className="px-3 text-sm mt-1 text-red-700">
-              {errors.fullName.message}
-            </p>
-          )}
         </div>
         <div>
           <label
@@ -62,17 +53,10 @@ export default function RequestForm({ onSubmit, user }: Props) {
           </label>
           <input
             id="email"
-            {...register("email")}
-            className={`w-full border-2 rounded-lg px-3 py-2 
-                ${errors.email ? "border-red-700" : "border-gray-300"}
-                ${user?.email ? "bg-gray-100 text-gray-700 cursor-not-allowed" : ""}`}
+            value={user?.email}
+            className="w-full border-2 rounded-lg px-3 py-2 border-gray-300 bg-gray-100 text-gray-700 cursor-not-allowed"
             readOnly={Boolean(user?.email)}
           />
-          {errors.email && (
-            <p className="px-3 text-sm mt-1 text-red-700">
-              {errors.email.message}
-            </p>
-          )}
         </div>
         <div>
           <label

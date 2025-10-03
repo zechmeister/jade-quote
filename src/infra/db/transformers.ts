@@ -6,10 +6,12 @@ import {
   TermYears,
   termYearsOptions,
 } from "../../domain/quote";
-import { offersTable, quotesTable } from "./schema";
+import type { User } from "@/domain/user";
+import { offersTable, quotesTable, usersTable } from "./schema";
 
 export type QuoteWithOffers = typeof quotesTable.$inferSelect & {
   offers: Array<typeof offersTable.$inferSelect>;
+  user: typeof usersTable.$inferSelect;
 };
 
 export function toDomainOffer(
@@ -29,6 +31,14 @@ export function toDomainOffer(
   };
 }
 
+export function toDomainUser(dbUser: typeof usersTable.$inferSelect): User {
+  return {
+    id: dbUser.id,
+    name: dbUser.name,
+    email: dbUser.email,
+  };
+}
+
 export function toDomainQuote(quoteRow: QuoteWithOffers): Quote {
   return {
     id: quoteRow.id,
@@ -36,13 +46,12 @@ export function toDomainQuote(quoteRow: QuoteWithOffers): Quote {
     riskBand: quoteRow.riskBand,
     offers: quoteRow.offers.map(toDomainOffer),
     createdAt: quoteRow.createdAt,
+    user: toDomainUser(quoteRow.user),
   };
 }
 
 export function toDomainQuoteRequest(quoteRow: QuoteWithOffers): QuoteRequest {
   return {
-    fullName: quoteRow.fullName,
-    email: quoteRow.email,
     address: quoteRow.address,
     monthlyConsumptionKwh: parseFloat(quoteRow.monthlyConsumptionKwh),
     systemSizeKw: parseFloat(quoteRow.systemSizeKw),

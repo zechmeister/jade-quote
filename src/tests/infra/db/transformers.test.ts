@@ -64,14 +64,17 @@ describe("transformers", () => {
         userId: "user-1",
         createdAt: new Date("2025-10-02"),
         updatedAt: new Date("2025-10-02"),
-        fullName: "John Doe",
-        email: "john@example.com",
         address: "123 Main St",
         monthlyConsumptionKwh: "400",
         systemSizeKw: "20",
         downPayment: "5000",
         systemPrice: "24000",
         riskBand: "B",
+        user: {
+          id: "user-1",
+          name: "John Doe",
+          email: "john@example.com",
+        },
         offers: [
           {
             id: "offer-1",
@@ -91,6 +94,11 @@ describe("transformers", () => {
         createdAt: new Date("2025-10-02"),
         systemPrice: 24000,
         riskBand: "B",
+        user: {
+          id: "user-1",
+          name: "John Doe",
+          email: "john@example.com",
+        },
         offers: [
           {
             termYears: 10,
@@ -108,14 +116,17 @@ describe("transformers", () => {
         userId: "user-1",
         createdAt: new Date(),
         updatedAt: new Date(),
-        fullName: "John Doe",
-        email: "john@example.com",
         address: "123 Main St",
         monthlyConsumptionKwh: "400",
         systemSizeKw: "20",
         downPayment: "5000",
         systemPrice: "24000",
         riskBand: "B",
+        user: {
+          id: "user-1",
+          name: "John Doe",
+          email: "john@example.com",
+        },
         offers: [
           {
             id: "offer-1",
@@ -160,22 +171,23 @@ describe("transformers", () => {
         userId: "user-1",
         createdAt: new Date(),
         updatedAt: new Date(),
-        fullName: "John Doe",
-        email: "john@example.com",
         address: "123 Main St",
         monthlyConsumptionKwh: "400",
         systemSizeKw: "20",
         downPayment: "5000",
         systemPrice: "24000",
         riskBand: "B",
+        user: {
+          id: "user-1",
+          name: "John Doe",
+          email: "john@example.com",
+        },
         offers: [],
       };
 
       const result = toDomainQuoteRequest(dbQuote);
 
       expect(result).toEqual({
-        fullName: "John Doe",
-        email: "john@example.com",
         address: "123 Main St",
         monthlyConsumptionKwh: 400,
         systemSizeKw: 20,
@@ -189,14 +201,17 @@ describe("transformers", () => {
         userId: "user-1",
         createdAt: new Date(),
         updatedAt: new Date(),
-        fullName: "John Doe",
-        email: "john@example.com",
         address: "123 Main St",
         monthlyConsumptionKwh: "450.5",
         systemSizeKw: "25.75",
         downPayment: "5500.25",
         systemPrice: "24000",
         riskBand: "B",
+        user: {
+          id: "user-1",
+          name: "John Doe",
+          email: "john@example.com",
+        },
         offers: [],
       };
 

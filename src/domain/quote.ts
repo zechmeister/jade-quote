@@ -1,8 +1,7 @@
 import { z } from "zod";
+import type { User } from "./user";
 
 export const QuoteRequestSchema = z.object({
-  fullName: z.string().min(2),
-  email: z.email(),
   address: z.string().min(1),
   monthlyConsumptionKwh: z.number().positive(),
   systemSizeKw: z.number().positive(),
@@ -26,6 +25,7 @@ export type Quote = {
   riskBand: RiskBand;
   offers: Offer[];
   createdAt: Date;
+  user: User;
 };
 
 export type Offer = {
