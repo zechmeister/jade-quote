@@ -11,7 +11,8 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "vitest run && npm run lint && npm run format:check",
+    "typecheck": "tsc --noEmit",
+    "check": "vitest run && npm run lint && npm run format:check && npm run typecheck",
     "db:generate": "drizzle-kit generate --config ./drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config ./drizzle.config.ts"
   },

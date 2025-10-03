@@ -28,7 +28,7 @@ Start the vite dev server with HMR (requires Docker services from setup step 3):
 npm run dev
 ```
 
-Access the app at http://localhost:3000 and login with `user@example.com` / `password` (regular user) or `admin@example.com` / `password` (admin user).
+Access the app at http://localhost:3000 and login with `user@test.com` / `password` (regular user) or `admin@test.com` / `password` (admin user).
 
 ### Database migrations:
 
